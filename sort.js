@@ -4,6 +4,34 @@ const _swap = (arr, i, j) => {
   arr[j] = temp
 }
 
+function _quickSortPartition(array, start, end) {
+  const pivot = array[end];
+  let i = start - 1;
+  for(j = start; j <= end - 1; j ++) {
+    if(array[j] <= pivot) {
+      i = i + 1;
+      _swap(array, i, j);
+    }
+  }
+  _swap(array, i + 1, end);
+  return i + 1;
+}
+
+function _shuffle(arr) {
+  let ret = []
+  let randIdx
+  let set = new Set()
+  for(let i = 0; i < arr.length; i++) {
+    do {
+      randIdx = Math.floor(Math.random() * arr.length)
+    } while (set.has(randIdx))
+    set.add(randIdx)
+    ret[i] = arr[randIdx]
+  }
+
+  return ret
+}
+
 const bubbleSort = (arr) => {
   const retArr = arr.slice()
   const n = retArr.length
@@ -49,8 +77,22 @@ const insertionSort = (arr) => {
   return retArr
 }
 
-const input = [2,7,5,9,6,1]
+const quickSort = (array, start, end) => {
+  if(start < end) {
+    // partition
+    var pivot = _quickSortPartition(array, start, end);
+    // left
+    quickSort(array, start, pivot - 1);
+    // right
+    quickSort(array, pivot + 1, end);
+  }
+}
 
-console.log('input = ', input, ', bubbleSort = ', bubbleSort(input))
-console.log('input = ', input, ', selectionSort = ', selectionSort(input))
-console.log('input = ', input, ', insertionSort = ', insertionSort(input))
+const length = 20
+const input = _shuffle(Array.from({ length }).map((_, i) => Math.floor(Math.random() * 500)))
+
+console.log(`input \t\t= [${input}]`)
+console.log(`bubbleSort \t= [${bubbleSort(input).toString()}]`)
+console.log(`selectionSort \t= [${selectionSort(input).toString()}]`)
+console.log(`insertionSort \t= [${insertionSort(input).toString()}]`)
+console.log(`quickSort \t= [${insertionSort(input).toString()}]`)

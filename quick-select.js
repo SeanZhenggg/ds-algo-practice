@@ -1,10 +1,10 @@
 function quickSelect(arr, k, type = 'largest') {
   let left = 0, right = arr.length - 1, pivot
-  let kLargest = type == 'largest' ? arr.length - k : k - 1
+  let kLargest = type === 'largest' ? arr.length - k : k - 1
   while(left <= right) {
     pivot = partition(arr, left, right)
 
-    if (kLargest == pivot) return arr[pivot]
+    if (kLargest === pivot) return arr[pivot]
 
     if (kLargest > pivot) left = pivot + 1
     else right = pivot - 1

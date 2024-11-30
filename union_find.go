@@ -24,6 +24,13 @@ func (u *UnionFind) FindRoot(idx int) int {
 		root = u.set[root]
 	}
 
+	// set parent of all parents to root
+	for idx != root {
+		var parent = u.set[idx]
+		u.set[idx] = root
+		idx = parent
+	}
+
 	return root
 }
 

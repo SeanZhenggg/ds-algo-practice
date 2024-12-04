@@ -117,20 +117,103 @@ func (pq *minPriorityQueue) print() {
 	}
 }
 
-func main() {
-	pq := NewMinPriorityQueue([]node{
-		{"B", 22},
-		{"E", 20},
-		{"H", 15},
-		{"C", 12},
-		{"I", 10},
-		{"G", 8},
-		{"A", 7},
-		{"F", 4},
-		{"D", 2},
-	})
+type PriorityQueue struct {
+	heap        []interface{}
+	compareFunc func(a, b interface{}) int
+}
 
-	pq.print()
+func NewPriorityQueue(compareFunc func(a, b interface{}) int) *PriorityQueue {
+	pq := &PriorityQueue{
+		heap:        make([]interface{}, 0),
+		compareFunc: compareFunc,
+	}
+
+	return pq
+}
+
+func (pq *PriorityQueue) build() {
+	for i := len(pq.heap) / 2; i >= 1; i-- {
+		pq.heapify(i)
+	}
+}
+
+func (pq *PriorityQueue) heapify(index int) {
+	length := pq.getLength()
+
+	minIndex := index
+	l := 2*index + 1
+	r := 2*index + 2
+	if l < length && pq.compareFunc(pq.heap[minIndex], pq.heap[l]) > 0 {
+		minIndex = l
+	}
+
+	if r < length && pq.compareFunc(pq.heap[minIndex], pq.heap[r]) > 0 {
+		minIndex = r
+	}
+
+	if pq.compareFunc(pq.heap[index], pq.heap[minIndex]) > 0 {
+		pq.swap(minIndex, index)
+	}
+
+	if minIndex != index {
+		pq.heapify(minIndex)
+	}
+}
+
+func (pq *PriorityQueue) getLength() int {
+	return len(pq.heap)
+}
+
+func (pq *PriorityQueue) swap(idx1 int, idx2 int) {
+	pq.heap[idx1], pq.heap[idx2] = pq.heap[idx2], pq.heap[idx1]
+}
+
+func (pq *PriorityQueue) poll() interface{} {
+	minIndex := 0
+	minNode := pq.heap[minIndex]
+
+	pq.heap[minIndex] = pq.heap[len(pq.heap)-1]
+
+	pq.heap = pq.heap[:len(pq.heap)-1]
+
+	pq.heapify(minIndex)
+
+	return minNode
+}
+
+func (pq *PriorityQueue) top() interface{} {
+	return pq.heap[0]
+}
+
+func (pq *PriorityQueue) push(n interface{}) {
+	pq.heap = append(pq.heap, n)
+	index := len(pq.heap) - 1
+	for index > 0 && pq.compareFunc(pq.heap[(index-1)/2], pq.heap[index]) > 0 {
+		pq.swap((index-1)/2, index)
+		index = (index - 1) / 2
+	}
+}
+
+func (pq *PriorityQueue) print() {
+	for i := 0; i < len(pq.heap); i++ {
+		fmt.Printf("index = %d, val = %v\n", i, pq.heap[i])
+	}
+}
+
+func main() {
+	//pq := NewMinPriorityQueue([]node{
+	//	{"B", 22},
+	//	{"E", 20},
+	//	{"H", 15},
+	//	{"C", 12},
+	//	{"I", 10},
+	//	{"G", 8},
+	//	{"A", 7},
+	//	{"F", 4},
+	//	{"D", 2},
+	//})
+
+	//pq.print()
 
 	//fmt.Println("============================================")
 	//
@@ -143,4 +226,31 @@ func main() {
 	//pq.poll()
 	//
 	//pq.print()
+
+	pq := NewPriorityQueue(func(a, b interface{}) int {
+		return a.([2]int)[0] - b.([2]int)[0]
+	})
+
+	pq.push([2]int{22, 1})
+	pq.push([2]int{20, 2})
+	pq.push([2]int{15, 3})
+	pq.push([2]int{12, 4})
+	pq.push([2]int{10, 5})
+	pq.push([2]int{8, 6})
+	pq.push([2]int{7, 7})
+	pq.push([2]int{4, 8})
+	pq.push([2]int{2, 9})
+
+	pq.print()
+	fmt.Println("============================================")
+
+	pq.push([2]int{3, 10})
+
+	pq.print()
+
+	fmt.Println("============================================")
+
+	pq.poll()
+
+	pq.print()
 }

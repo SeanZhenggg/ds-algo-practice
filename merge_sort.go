@@ -14,13 +14,13 @@ func MergeSort(nums []int, l int, r int) []int {
 	left := MergeSort(nums, l, mid)
 	right := MergeSort(nums, mid+1, r)
 
-	merge(nums, left, right, l, r)
+	merge(nums, left, right, l)
 	arr := make([]int, r-l+1)
 	copy(arr, nums[l:r+1])
 	return arr
 }
 
-func merge(nums []int, left []int, right []int, l int, r int) {
+func merge(nums []int, left []int, right []int, l int) {
 	var ll = 0
 	var rr = 0
 
@@ -50,7 +50,7 @@ func merge(nums []int, left []int, right []int, l int, r int) {
 }
 
 func main() {
-	nums := []int{3, 1, 5, 2, 4}
-	MergeSort(nums, 0, 4)
+	nums := []int{3, 1, 5, 2, 4, 11, 6, 5, 7, 4}
+	MergeSort(nums, 0, len(nums)-1)
 	log.Printf("nums: %v", nums)
 }

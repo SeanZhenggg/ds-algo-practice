@@ -151,11 +151,8 @@ func (pq *PriorityQueue) heapify(index int) {
 		minIndex = r
 	}
 
-	if pq.compareFunc(pq.heap[index], pq.heap[minIndex]) > 0 {
-		pq.swap(minIndex, index)
-	}
-
 	if minIndex != index {
+		pq.swap(minIndex, index)
 		pq.heapify(minIndex)
 	}
 }

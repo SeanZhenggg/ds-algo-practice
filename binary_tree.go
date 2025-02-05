@@ -136,6 +136,37 @@ func IterativePostorderTraversal(root *TreeNode) []*TreeNode {
 	return nodes
 }
 
+func IterativePostorderTraversal2(root *TreeNode) []*TreeNode {
+	nodes := make([]*TreeNode, 0)
+	st := make([]*TreeNode, 0)
+
+	node := root
+	for len(st) > 0 || node != nil {
+		if node != nil {
+			st = append(st, node)
+			node = node.Left
+		} else {
+			temp := st[len(st)-1].Right
+
+			if temp == nil {
+				temp = st[len(st)-1]
+				st = st[:len(st)-1]
+				nodes = append(nodes, temp)
+
+				for len(st) > 0 && temp == st[len(st)-1].Right {
+					temp = st[len(st)-1]
+					st = st[:len(st)-1]
+					nodes = append(nodes, temp)
+				}
+			} else {
+				node = temp
+			}
+		}
+	}
+
+	return nodes
+}
+
 //	  4
 //	2	7
 // 1 3 6 9
@@ -147,19 +178,21 @@ func main() {
 		Right: &TreeNode{Val: 7, Left: &TreeNode{Val: 6}, Right: &TreeNode{Val: 9}},
 	}
 
-	preTraversals := PreorderTraversal(root)
-	printTree(preTraversals)
-	preTraversals = IterativePreorderTraversal(root)
-	printTree(preTraversals)
-
-	inTraversals := InorderTraversal(root)
-	printTree(inTraversals)
-	inTraversals = IterativeInorderTraversal(root)
-	printTree(inTraversals)
-
-	postTraversals := PostorderTraversal(root)
-	printTree(postTraversals)
-	postTraversals = IterativePostorderTraversal(root)
+	//preTraversals := PreorderTraversal(root)
+	//printTree(preTraversals)
+	//preTraversals = IterativePreorderTraversal(root)
+	//printTree(preTraversals)
+	//
+	//inTraversals := InorderTraversal(root)
+	//printTree(inTraversals)
+	//inTraversals = IterativeInorderTraversal(root)
+	//printTree(inTraversals)
+	//
+	//postTraversals := PostorderTraversal(root)
+	//printTree(postTraversals)
+	//postTraversals = IterativePostorderTraversal(root)
+	//printTree(postTraversals)
+	postTraversals := IterativePostorderTraversal2(root)
 	printTree(postTraversals)
 }
 

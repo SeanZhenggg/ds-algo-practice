@@ -54,7 +54,7 @@ const selectionSort = (arr) => {
     for(let j = i + 1; j < n; j ++) {
       if(retArr[j] < retArr[min]) min = j
     }
-    if(min != i) _swap(retArr, i, min)
+    if(min !== i) _swap(retArr, i, min)
   }
 
   return retArr

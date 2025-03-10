@@ -22,6 +22,20 @@ func main() {
 
 	idx, found = binarySearchWithDuplicateSearchValues2(arr2, 7)
 	log.Printf("found: %t, at index: %d", found, idx)
+
+	arr3 := []int{1, 4, 7, 7, 10, 13}
+	idx, found = binarySearchWithDuplicateSearchValues(arr3, 14)
+	log.Printf("found: %t, at index: %d", found, idx)
+
+	idx, found = binarySearchWithDuplicateSearchValues2(arr3, 14)
+	log.Printf("found: %t, at index: %d", found, idx)
+
+	arr4 := []int{1, 4, 7, 7, 10, 13}
+	idx, found = binarySearchWithDuplicateSearchValues(arr4, 0)
+	log.Printf("found: %t, at index: %d", found, idx)
+
+	idx, found = binarySearchWithDuplicateSearchValues2(arr4, 0)
+	log.Printf("found: %t, at index: %d", found, idx)
 }
 
 func binarySearch(arr []int, search int) (int, bool) {
@@ -63,7 +77,7 @@ func binarySearchWithFindGreaterMinIndexWhenNotFound(arr []int, search int) (int
 		}
 	}
 
-	return l, true
+	return l, false
 }
 
 func binarySearchWithFindLesserMaxIndexWhenNotFound(arr []int, search int) (int, bool) {
@@ -84,7 +98,7 @@ func binarySearchWithFindLesserMaxIndexWhenNotFound(arr []int, search int) (int,
 		}
 	}
 
-	return r, true
+	return r, false
 }
 
 func binarySearchWithDuplicateSearchValues(arr []int, search int) (int, bool) {
@@ -102,8 +116,11 @@ func binarySearchWithDuplicateSearchValues(arr []int, search int) (int, bool) {
 			l = mid + 1
 		}
 	}
+	if l == -1 || l == len(arr) {
+		return l, false
+	}
 
-	return l, true
+	return l, arr[l] == search
 }
 
 func binarySearchWithDuplicateSearchValues2(arr []int, search int) (int, bool) {
@@ -122,5 +139,9 @@ func binarySearchWithDuplicateSearchValues2(arr []int, search int) (int, bool) {
 		}
 	}
 
-	return r, true
+	if r == -1 || r == len(arr) {
+		return r, false
+	}
+
+	return r, arr[r] == search
 }

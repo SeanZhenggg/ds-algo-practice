@@ -111,60 +111,61 @@ func PostorderTraversal(root *TreeNode) []*TreeNode {
 }
 
 func IterativePostorderTraversal(root *TreeNode) []*TreeNode {
-	nodes := make([]*TreeNode, 0)
+	result := make([]*TreeNode, 0)
 	st := make([]*TreeNode, 0)
 
-	node := root
-	var lastNodeVisited *TreeNode = nil
-	for len(st) > 0 || node != nil {
-		if node != nil {
-			st = append(st, node)
-			node = node.Left
+	current := root           // 記錄當前走到的節點
+	var lastVisited *TreeNode // 記錄最近一個走過的節點
+	for len(st) > 0 || current != nil {
+		if current != nil { // 遍歷節點
+			st = append(st, current) // 將節點放入 stack 中
+			current = current.Left   // 往左遍歷
 		} else {
-			top := st[len(st)-1]
-
-			if top.Right != nil && lastNodeVisited != top.Right {
-				node = top.Right
+			top := st[len(st)-1].Right            // stack 頂端的節點
+			if top != nil && top != lastVisited { // 判斷其有沒有右邊的子節點，而且這個右邊的子節點不是最近走過的
+				current = top // 往右遍歷
 			} else {
-				nodes = append(nodes, top)
+				// 沒有的話則將頂端的節點放至結果陣列，並且pop出頂端的節點
+				top = st[len(st)-1]
 				st = st[:len(st)-1]
-				lastNodeVisited = top
+				result = append(result, top)
+				lastVisited = top // 記錄最近一個走過的節點
 			}
 		}
 	}
 
-	return nodes
+	return result
 }
 
 func IterativePostorderTraversal2(root *TreeNode) []*TreeNode {
-	nodes := make([]*TreeNode, 0)
+	result := make([]*TreeNode, 0)
 	st := make([]*TreeNode, 0)
 
-	node := root
-	for len(st) > 0 || node != nil {
-		if node != nil {
-			st = append(st, node)
-			node = node.Left
+	current := root
+	for len(st) > 0 || current != nil {
+		if current != nil {
+			st = append(st, current)
+			current = current.Left
 		} else {
-			temp := st[len(st)-1].Right
+			topRight := st[len(st)-1].Right
 
-			if temp == nil {
-				temp = st[len(st)-1]
-				st = st[:len(st)-1]
-				nodes = append(nodes, temp)
-
-				for len(st) > 0 && temp == st[len(st)-1].Right {
-					temp = st[len(st)-1]
-					st = st[:len(st)-1]
-					nodes = append(nodes, temp)
-				}
+			if topRight != nil {
+				current = topRight
 			} else {
-				node = temp
+				top := st[len(st)-1]
+				st = st[:len(st)-1]
+				result = append(result, top)
+
+				// 如果遇到堆疊頂端的節點其右子節點是當前的 top，代表頂端節點的右邊子樹已經遍歷完了，可以連續彈出
+				for len(st) > 0 && st[len(st)-1].Right == top {
+					top = st[len(st)-1]
+					st = st[:len(st)-1]
+					result = append(result, top)
+				}
 			}
 		}
 	}
-
-	return nodes
+	return result
 }
 
 //	  4
